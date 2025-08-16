@@ -23,8 +23,6 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-tertiary: var(--tertiary);
   --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-active: var(--accent-active);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
@@ -43,6 +41,12 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --shadow-input: 0px 2px 4px -2px hsl(0 0% 0% / 0.12);
   --shadow-popup: 0px 16px 32px -8px hsla(0, 0%, 0%, 0.16),
@@ -62,19 +66,13 @@
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  /* --muted: oklch(0.97 0 0); */
-  --muted: hsl(223, 9%, 44%);
+  --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --tertiary: hsl(222.86, 9.72%, 71.76%);
-  /* --accent: oklch(0.97 0 0); */
-  --accent: hsl(144, 97%, 27%);
-  --accent-hover: hsl(144, 97%, 31%);
-  --accent-active: hsl(144, 97%, 23%);
+  --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
-  /* --input: oklch(0.922 0 0); */
-  --input: hsl(226, 10%, 80%);
+  --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -89,6 +87,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --accent: hsl(144, 97%, 27%);
+  --accent-hover: hsl(144, 97%, 31%);
+  --accent-active: hsl(144, 97%, 23%);
+  --textfield-default: hsl(226, 10%, 80%);
+  --text-primary: hsl(0, 0%, 25.1%);
+  --text-secondary: hsl(223, 9%, 44%);
+  --text-tertiary: hsl(222.86, 9.72%, 71.76%);
 }
 
 .dark {
