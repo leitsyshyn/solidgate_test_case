@@ -8,12 +8,20 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { Info } from "lucide-react";
 
 export const PaymentFormSchema = z.object({
   // TODO: Improve schema validation rules
@@ -95,16 +103,37 @@ export default function PayWithCardForm({ amount }: PayWithCardFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>CVC</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="•••"
-                  inputMode="numeric"
-                  maxLength={4}
-                  autoComplete="cc-csc"
-                  className="pr-11"
-                  {...field}
-                />
-              </FormControl>
+              <div className="relative">
+                <FormControl>
+                  <Input
+                    placeholder="•••"
+                    inputMode="numeric"
+                    maxLength={4}
+                    autoComplete="cc-csc"
+                    className="pr-11"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription className="sr-only">
+                  CVC is a 3–4 digit security code.
+                </FormDescription>
+
+                {/* TODO: Fix tooltip on mobile */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="What is CVV?"
+                      className="absolute right-2 top-1/2 -translate-y-1/2"
+                    >
+                      <Info className="size-4.5" aria-hidden="true" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    CVC is a 3–4 digit security code.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
 
               <FormMessage />
             </FormItem>
