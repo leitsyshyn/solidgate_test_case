@@ -68,7 +68,7 @@ export default function PayWithCardForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 text-text-secondary"
+        className="flex flex-col gap-4 text-muted"
       >
         <FormField
           control={form.control}
@@ -136,7 +136,7 @@ export default function PayWithCardForm({
                       <button
                         type="button"
                         aria-label="What is CVV?"
-                        className="absolute right-0 hover:text-text-secondary text-text-tertiary size-11 top-1/2 -translate-y-1/2 flex items-center justify-center"
+                        className="absolute right-0 hover:text-muted text-text-tertiary size-11 top-1/2 -translate-y-1/2 flex items-center justify-center"
                       >
                         <Info
                           className="size-4.5  transition-colors duration-120 ease-in"
