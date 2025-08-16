@@ -21,7 +21,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { Info } from "lucide-react";
+import Info from "@/assets/Info.svg?react";
+import Loader from "@/assets/Loader.svg?react";
+import { cn } from "@/lib/utils";
 
 export const PaymentFormSchema = z.object({
   // TODO: Improve schema validation rules
@@ -41,7 +43,9 @@ interface PayWithCardFormProps {
   amount?: number;
 }
 
-export default function PayWithCardForm({ amount }: PayWithCardFormProps) {
+export default function PayWithCardForm({
+  amount = 299.99,
+}: PayWithCardFormProps) {
   const form = useForm<z.infer<typeof PaymentFormSchema>>({
     resolver: zodResolver(PaymentFormSchema),
     defaultValues: {
@@ -52,13 +56,17 @@ export default function PayWithCardForm({ amount }: PayWithCardFormProps) {
     mode: "onSubmit",
   });
 
-  function onSubmit(values: z.infer<typeof PaymentFormSchema>) {
+  async function onSubmit(values: z.infer<typeof PaymentFormSchema>) {
     console.log(values);
+    await new Promise((r) => setTimeout(r, 800));
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 text-muted"
+      >
         <FormField
           control={form.control}
           name="cardNumber"
@@ -78,68 +86,103 @@ export default function PayWithCardForm({ amount }: PayWithCardFormProps) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="expirationDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Expiration Date</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  inputMode="numeric"
-                  autoComplete="cc-exp"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="securityCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>CVC</FormLabel>
-              <div className="relative">
+        <div className="flex gap-2 items-start">
+          <FormField
+            control={form.control}
+            name="expirationDate"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Expiration Date</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="•••"
+                    placeholder="MM/YY"
+                    maxLength={5}
                     inputMode="numeric"
-                    maxLength={4}
-                    autoComplete="cc-csc"
-                    className="pr-11"
+                    autoComplete="cc-exp"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription className="sr-only">
-                  CVC is a 3–4 digit security code.
-                </FormDescription>
-
-                {/* TODO: Fix tooltip on mobile */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label="What is CVV?"
-                      className="absolute right-2 top-1/2 -translate-y-1/2"
-                    >
-                      <Info className="size-4.5" aria-hidden="true" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="securityCode"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>CVC</FormLabel>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      placeholder="•••"
+                      inputMode="numeric"
+                      maxLength={4}
+                      autoComplete="cc-csc"
+                      className="pr-11"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="sr-only">
                     CVC is a 3–4 digit security code.
-                  </TooltipContent>
-                </Tooltip>
-              </div>
+                  </FormDescription>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Pay {amount}</Button>
+                  {/* TODO: Fix tooltip on mobile */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label="What is CVV?"
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <Info className="size-4.5" aria-hidden="true" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      CVC is a 3–4 digit security code.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="text-base bg-accent h-12 disabled:opacity-100 ease-in duration-80 shadow-none hover:bg-accent-hover active:bg-accent-active hover:translate-y-[-2px] active:translate-y-[2px]"
+        >
+          <div
+            className="relative overflow-hidden w-full h-full flex items-center justify-center"
+            aria-live="polite"
+            role="status"
+          >
+            <span
+              className={cn(
+                "transition-[opacity,translate] duration-120 ease-out",
+                form.formState.isSubmitting
+                  ? "-translate-y-4 opacity-0"
+                  : "translate-y-0 opacity-100"
+              )}
+            >
+              Pay {amount} UAH
+            </span>
+
+            <span
+              className={cn(
+                "absolute inset-0 flex items-center justify-center gap-3 transition-[opacity,translate] duration-120 ease-out",
+                form.formState.isSubmitting
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-4 opacity-0"
+              )}
+            >
+              <Loader className="size-4.5 animate-spin" aria-hidden />
+              Processing payment
+            </span>
+          </div>
+        </Button>
       </form>
     </Form>
   );
