@@ -21,6 +21,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary: var(--tertiary);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-active: var(--accent-active);
@@ -44,6 +45,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --shadow-input: 0px 2px 4px -2px hsl(0 0% 0% / 0.12);
+  --shadow-popup: 0px 16px 32px -8px hsla(0, 0%, 0%, 0.16),
+    0px 4px 8px -2px hsla(0, 0%, 0%, 0.24),
+    0px 0px 0px 1px hsla(0, 0%, 0%, 0.08);
 }
 
 :root {
@@ -61,6 +65,7 @@
   /* --muted: oklch(0.97 0 0); */
   --muted: hsl(223, 9%, 44%);
   --muted-foreground: oklch(0.556 0 0);
+  --tertiary: hsl(222.86, 9.72%, 71.76%);
   /* --accent: oklch(0.97 0 0); */
   --accent: hsl(144, 97%, 27%);
   --accent-hover: hsl(144, 97%, 31%);

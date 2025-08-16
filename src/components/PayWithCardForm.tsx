@@ -15,14 +15,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
+import Info from "@/assets/Info.svg?react";
+import Loader from "@/assets/Loader.svg?react";
+import AmexInfo from "@/assets/amex_info.svg?react";
+import CardInfo from "@/assets/card_info.svg?react";
+import Slash from "@/assets/slash.svg?react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-import Info from "@/assets/Info.svg?react";
-import Loader from "@/assets/Loader.svg?react";
 import { cn } from "@/lib/utils";
 
 export const PaymentFormSchema = z.object({
@@ -110,7 +113,7 @@ export default function PayWithCardForm({
             control={form.control}
             name="securityCode"
             render={({ field }) => (
-              <FormItem className="flex-1">
+              <FormItem className="flex-1 gap-2">
                 <FormLabel>CVC</FormLabel>
                 <div className="relative">
                   <FormControl>
@@ -133,13 +136,23 @@ export default function PayWithCardForm({
                       <button
                         type="button"
                         aria-label="What is CVV?"
-                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                        className="absolute right-0 hover:text-muted text-tertiary size-11 top-1/2 -translate-y-1/2 flex items-center justify-center"
                       >
-                        <Info className="size-4.5" aria-hidden="true" />
+                        <Info
+                          className="size-4.5  transition-colors duration-120 ease-in"
+                          aria-hidden="true"
+                        />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      CVC is a 3–4 digit security code.
+                    <TooltipContent
+                      sideOffset={16}
+                      className="bg-primary-foreground p-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <CardInfo />
+                        <Slash />
+                        <AmexInfo />
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </div>
