@@ -1,72 +1,47 @@
-import Arrow from "@/assets/Arrow.svg?react";
 import PayWithCardForm from "@/components/PayWithCardForm";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 
-import ApplePay from "@/assets/ApplePay.svg?react";
-import Union from "@/assets/Union.svg?react";
-import { Button } from "@/components/ui/button";
+import ApplePayButton from "@/components/ApplePayButton";
+import BackButton from "@/components/BackButton";
+import Divider from "@/components/Divider";
+import Footer from "@/components/Footer";
+import LegalInfo from "@/components/LegalInfo";
+import OrderInfo from "@/components/OrderInfo";
+
+import Arrow from "@/assets/Arrow.svg?react";
+import LanguageToggle from "@/components/LanguegeToggle";
 
 export default function PaymentPage() {
   return (
-    <div className="p-4 pb-10 ">
-      <div className="flex items-center gap-2 justify-between mb-4">
-        <Arrow />
-        <span className="text-lg leading-8 font-semibold">Checkout</span>
-        <span>Укр</span>
-      </div>
-
-      <div className="max-w-md mx-auto flex flex-col items-center justify-center gap-6">
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="font-semibold text-2xl leading-8 ">5 days free</div>
-          <div className="font-medium leading-5">
-            then 299.99 UAH per 14 days
-          </div>
+    <div className="p-4">
+      <div className="mx-auto w-fit">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4 lg:grid-cols-1 lg:justify-items-end">
+          <Arrow className="size-6 lg:hidden justify-self-start" />
+          <span className="text-lg leading-8 font-semibold lg:hidden justify-self-center">
+            Checkout
+          </span>
+          <LanguageToggle className="justify-self-end" />
         </div>
-        <Button className="text-base h-12 shadow-none w-full rounded-[3px] ">
-          <ApplePay className="size-12" />
-        </Button>
-        <div className="w-full flex items-center justify-center gap-4 overflow-hidden">
-          <Separator />
-          <span className="shrink-0 text-sm text-muted">or continue with</span>
-          <Separator />
-        </div>
-        <div className="space-y-2">
-          <PayWithCardForm />
-          <Alert>
-            <AlertDescription>
-              <span>
-                You'll have your{" "}
-                <span className="font-bold">Plan Pro during 1 year</span>. After
-                this period of time, your plan will be{" "}
-                <span className="font-bold">automatically renewed</span> with
-                its original price without any discounts applied.
-              </span>
-            </AlertDescription>
-          </Alert>
-        </div>
-        <div className="w-full bg-order  rounded-md p-4 pt-3 flex flex-col gap-4 ">
-          <div className="text-lg leading-6 font-semibold">{`Order info <= 100 char.`}</div>
-          <div className=" leading-6 font-medium">{`Description <= 400 char.`}</div>
-          <Separator />
-          <div>
-            <div className="text-sm leading-5 font-medium">
-              Lamel Professional Smart Skin Compact Powder
+        <div className="flex max-lg:flex-col gap-8">
+          <div className="max-w-md basis-md shrink-0 flex flex-col gap-6">
+            <BackButton className="max-lg:hidden" />
+            <div className="max-lg:text-center">
+              <div className="font-semibold text-2xl leading-8 ">
+                5 days free
+              </div>
+              <div className="font-medium leading-5">
+                then 299.99 UAH per 14 days
+              </div>
             </div>
-            <div className="text-xs text-muted leading-4">
-              Пудра для обличчя
+            <ApplePayButton />
+            <Divider />
+            <div className="space-y-2">
+              <PayWithCardForm />
+              <LegalInfo />
             </div>
           </div>
-          <Separator />
-          <div className="font-semibold self-end">
-            <span>299.99 UAH /</span>
-            <span className="text-sm"> month</span>
-          </div>
+          <OrderInfo className="max-w-md lg:basis-md shrink-0" />
         </div>
-        <div className="flex gap-1 items-center justify-self-end">
-          <span className="text-muted leading-5 ">Powered by</span>
-          <Union />
-        </div>
+        <Footer className="max-lg:mb-9 mt-8 lg:mt-14 mx-auto" />
       </div>
     </div>
   );
