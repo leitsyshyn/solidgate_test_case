@@ -23,16 +23,23 @@ export const PaymentFormSchema = z.object({
   expirationDate: z
     .string()
     .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Expiry must be in MM/YY format"),
-  CVVCode: z.string().regex(/^\d{3,4}$/, "CVC must be 3 or 4 digits"),
+  securityCode: z
+    .string()
+    .regex(/^\d{3,4}$/, "Security code must be 3 or 4 digits"),
 });
 
-export default function PayWithCardForm() {
+interface PayWithCardFormProps {
+  // TODO: Improve amount type
+  amount?: number;
+}
+
+export default function PayWithCardForm({ amount }: PayWithCardFormProps) {
   const form = useForm<z.infer<typeof PaymentFormSchema>>({
     resolver: zodResolver(PaymentFormSchema),
     defaultValues: {
       cardNumber: "",
       expirationDate: "",
-      CVVCode: "",
+      securityCode: "",
     },
     mode: "onSubmit",
   });
@@ -51,7 +58,13 @@ export default function PayWithCardForm() {
             <FormItem>
               <FormLabel>Card Number</FormLabel>
               <FormControl>
-                <Input placeholder="1234 1234 1234 1234" {...field} />
+                <Input
+                  placeholder="1234 1234 1234 1234"
+                  maxLength={19}
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,7 +77,13 @@ export default function PayWithCardForm() {
             <FormItem>
               <FormLabel>Expiration Date</FormLabel>
               <FormControl>
-                <Input placeholder="MM/YY" {...field} />
+                <Input
+                  placeholder="MM/YY"
+                  maxLength={5}
+                  inputMode="numeric"
+                  autoComplete="cc-exp"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -72,18 +91,26 @@ export default function PayWithCardForm() {
         />
         <FormField
           control={form.control}
-          name="CVVCode"
+          name="securityCode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>CVV Code</FormLabel>
+              <FormLabel>CVC</FormLabel>
               <FormControl>
-                <Input placeholder="•••" {...field} />
+                <Input
+                  placeholder="•••"
+                  inputMode="numeric"
+                  maxLength={4}
+                  autoComplete="cc-csc"
+                  className="pr-11"
+                  {...field}
+                />
               </FormControl>
+
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Pay {amount}</Button>
       </form>
     </Form>
   );
