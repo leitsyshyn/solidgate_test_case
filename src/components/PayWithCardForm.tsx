@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { PatternFormat } from "react-number-format";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -22,20 +23,9 @@ import AmexInfo from "@/assets/amex_info.svg?react";
 import CardInfo from "@/assets/card_info.svg?react";
 import Slash from "@/assets/slash.svg?react";
 import { Hint, HintContent, HintTrigger } from "@/components/ui/hint";
+import { PayWithCardFormSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-
-export const PaymentFormSchema = z.object({
-  // TODO: Improve schema validation rules
-  cardNumber: z
-    .string()
-    .regex(/^\d{13,19}$/, "Card number must be 13–19 digits"),
-  expirationDate: z
-    .string()
-    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Expiry must be in MM/YY format"),
-  securityCode: z
-    .string()
-    .regex(/^\d{3,4}$/, "Security code must be 3 or 4 digits"),
-});
+import valid from "card-validator";
 
 interface PayWithCardFormProps {
   // TODO: Improve amount type
@@ -45,8 +35,8 @@ interface PayWithCardFormProps {
 export default function PayWithCardForm({
   amount = 299.99,
 }: PayWithCardFormProps) {
-  const form = useForm<z.infer<typeof PaymentFormSchema>>({
-    resolver: zodResolver(PaymentFormSchema),
+  const form = useForm<z.infer<typeof PayWithCardFormSchema>>({
+    resolver: zodResolver(PayWithCardFormSchema),
     defaultValues: {
       cardNumber: "",
       expirationDate: "",
@@ -55,9 +45,11 @@ export default function PayWithCardForm({
     mode: "onSubmit",
   });
 
-  async function onSubmit(values: z.infer<typeof PaymentFormSchema>) {
-    console.log(values);
+  const card = valid.number(form.watch("cardNumber"));
+
+  async function onSubmit(values: z.infer<typeof PayWithCardFormSchema>) {
     await new Promise((r) => setTimeout(r, 800));
+    console.log(values);
   }
 
   return (
@@ -69,21 +61,41 @@ export default function PayWithCardForm({
         <FormField
           control={form.control}
           name="cardNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Card Number</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="1234 1234 1234 1234"
-                  maxLength={19}
-                  inputMode="numeric"
-                  autoComplete="cc-number"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const ALLOW_19 = false;
+            const c = valid.number(field.value).card;
+            let lengths = c?.lengths ?? [15, 16];
+            if (!ALLOW_19) lengths = lengths.filter((L) => L <= 16);
+            const maxLen = Math.max(...lengths);
+            const baseGaps = c?.gaps ?? [4, 8, 12];
+            const gaps = baseGaps.filter((g) => g < maxLen);
+            const format = Array.from({ length: maxLen }, (_, i) => {
+              const pos = i + 1;
+              return gaps.includes(pos) && pos < maxLen ? "# " : "#";
+            }).join("");
+            return (
+              <FormItem>
+                <FormLabel>Card Number</FormLabel>
+                <FormControl>
+                  <PatternFormat
+                    customInput={Input}
+                    inputMode="numeric"
+                    autoComplete="cc-number"
+                    placeholder="1234 5678 9012 3456"
+                    format={format}
+                    onValueChange={(v) => {
+                      field.onChange(v.formattedValue);
+                      if (form.formState.errors.securityCode) {
+                        void form.trigger("securityCode");
+                      }
+                    }}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
         <div className="flex gap-2 items-start">
           <FormField
@@ -93,12 +105,41 @@ export default function PayWithCardForm({
               <FormItem className="flex-1">
                 <FormLabel>Expiration Date</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="MM/YY"
-                    maxLength={5}
+                  <PatternFormat
+                    customInput={Input}
                     inputMode="numeric"
                     autoComplete="cc-exp"
-                    {...field}
+                    format="##/##"
+                    placeholder="MM/YY"
+                    mask={["M", "M", "Y", "Y"]}
+                    valueIsNumericString
+                    value={field.value}
+                    onBlur={field.onBlur}
+                    isAllowed={({ value }) => {
+                      if (value.length < 2) return true;
+                      const m = Number(value.slice(0, 2));
+                      return m >= 1 && m <= 12;
+                    }}
+                    onValueChange={({ value: v }) => {
+                      if (v.length === 1 && /[2-9]/.test(v)) v = "0" + v;
+                      field.onChange(v);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Backspace") return;
+                      const el = e.currentTarget as HTMLInputElement;
+                      const selStart = el.selectionStart ?? 0;
+                      const selEnd = el.selectionEnd ?? selStart;
+                      if (selStart !== selEnd) return;
+                      const digits = field.value ?? "";
+                      if (
+                        digits.length >= 1 &&
+                        digits[0] === "0" &&
+                        selStart <= 2
+                      ) {
+                        e.preventDefault();
+                        field.onChange(digits.slice(2));
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -108,22 +149,26 @@ export default function PayWithCardForm({
           <FormField
             control={form.control}
             name="securityCode"
+            rules={{ deps: ["cardNumber"] }}
             render={({ field }) => (
               <FormItem className="flex-1 gap-2">
-                <FormLabel>CVC</FormLabel>
+                <FormLabel>{card.card?.code?.name ?? "CVC"}</FormLabel>
                 <div className="relative">
                   <FormControl>
-                    <Input
-                      placeholder="•••"
+                    <PatternFormat
+                      customInput={Input}
                       inputMode="numeric"
-                      maxLength={4}
                       autoComplete="cc-csc"
+                      placeholder={"•".repeat(card.card?.code?.size ?? 3)}
+                      format={"#".repeat(card.card?.code?.size ?? 3)}
                       className="pr-11"
                       {...field}
                     />
                   </FormControl>
                   <FormDescription className="sr-only">
-                    CVC is a 3–4 digit security code.
+                    {card.card?.code?.name === "CID"
+                      ? "A 4-digit code on the front of your card."
+                      : "A 3-digit code on the back of your card."}
                   </FormDescription>
                   <Hint delayDuration={150}>
                     <HintTrigger asChild>
@@ -158,6 +203,7 @@ export default function PayWithCardForm({
             )}
           />
         </div>
+
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
