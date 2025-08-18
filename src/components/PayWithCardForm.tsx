@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,25 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import Info from "@/assets/Info.svg?react";
-import Loader from "@/assets/Loader.svg?react";
-import AmexInfo from "@/assets/amex_info.svg?react";
-import CardInfo from "@/assets/card_info.svg?react";
-import Slash from "@/assets/slash.svg?react";
-import { Hint, HintContent, HintTrigger } from "@/components/ui/hint";
+import PayWithCardButton from "@/components/PayWithCardButton";
+import SecurityCodeHint from "@/components/SecurityCodeHint";
 import { PayWithCardFormSchema } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
+import type { Plan } from "@/lib/types";
 import valid from "card-validator";
 import { toast } from "sonner";
-
 interface PayWithCardFormProps {
-  // TODO: Improve amount type
-  amount?: number;
+  plan: Plan;
 }
 
-export default function PayWithCardForm({
-  amount = 299.99,
-}: PayWithCardFormProps) {
+export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
   const form = useForm<z.infer<typeof PayWithCardFormSchema>>({
     resolver: zodResolver(PayWithCardFormSchema),
     defaultValues: {
@@ -173,74 +164,18 @@ export default function PayWithCardForm({
                       ? "A 4-digit code on the front of your card."
                       : "A 3-digit code on the back of your card."}
                   </FormDescription>
-                  <Hint delayDuration={150}>
-                    <HintTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label="What is CVV?"
-                        className="absolute right-0 hover:text-muted text-text-tertiary size-11 top-1/2 -translate-y-1/2 flex items-center justify-center"
-                      >
-                        <Info
-                          className="size-4.5 transition-colors duration-120 ease-in"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </HintTrigger>
-
-                    <HintContent
-                      className="p-4 w-min"
-                      side="top"
-                      withArrow={false}
-                      sideOffset={12}
-                    >
-                      <div className="flex items-center gap-2">
-                        <CardInfo />
-                        <Slash />
-                        <AmexInfo />
-                      </div>
-                    </HintContent>
-                  </Hint>
+                  <SecurityCodeHint />
                 </div>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          className="text-base bg-accent h-12 disabled:opacity-100 ease-in duration-80 shadow-none hover:bg-accent-hover active:bg-accent-active hover:translate-y-[-2px] active:translate-y-[2px]"
-        >
-          <div
-            className="relative overflow-hidden w-full h-full flex items-center justify-center"
-            aria-live="polite"
-            role="status"
-          >
-            <span
-              className={cn(
-                "transition-[opacity,translate] duration-120 ease-out",
-                form.formState.isSubmitting
-                  ? "-translate-y-4 opacity-0"
-                  : "translate-y-0 opacity-100"
-              )}
-            >
-              Pay {amount} UAH
-            </span>
-
-            <span
-              className={cn(
-                "absolute inset-0 flex items-center justify-center gap-3 transition-[opacity,translate] duration-120 ease-out",
-                form.formState.isSubmitting
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-4 opacity-0"
-              )}
-            >
-              <Loader className="size-4.5 animate-spin" aria-hidden />
-              Processing payment
-            </span>
-          </div>
-        </Button>
+        <PayWithCardButton
+          submitting={form.formState.isSubmitting}
+          plan={plan}
+          className="w-full"
+        />
       </form>
     </Form>
   );

@@ -1,8 +1,10 @@
 import Arrow from "@/assets/Arrow.svg?react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export default function BackButton({ className }: { className?: string }) {
+  const { t } = useTranslation("common");
   return (
     <Button
       type="submit"
@@ -21,7 +23,9 @@ export default function BackButton({ className }: { className?: string }) {
             "translate-y-0 opacity-100 "
           )}
         >
-          <span className="text-lg leading-8 font-semibold">Checkout</span>
+          <span className="text-lg leading-8 font-semibold">
+            {t("pages.checkout.title")}
+          </span>
         </span>
 
         <span
@@ -31,7 +35,9 @@ export default function BackButton({ className }: { className?: string }) {
             "translate-y-4 opacity-0 "
           )}
         >
-          <span className="text-lg leading-8 font-semibold">Back</span>
+          <span className="text-lg leading-8 font-semibold">
+            {t("buttons.back")}
+          </span>
         </span>
       </div>
     </Button>

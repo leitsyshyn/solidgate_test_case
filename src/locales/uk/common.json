@@ -1,0 +1,4 @@
+{
+  "buttons": { "back": "Назад" },
+  "pages": { "checkout": { "title": "Оплата" } }
+}

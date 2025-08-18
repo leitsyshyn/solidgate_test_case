@@ -1,6 +1,5 @@
 "use client";
 
-import usePrefersCoarsePointer from "@/components/hooks/usePrefersCoarsePointer";
 import {
   Popover,
   PopoverContent,
@@ -11,6 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import usePrefersCoarsePointer from "@/hooks/usePrefersCoarsePointer";
 import * as React from "react";
 
 type Mode = "auto" | "tooltip" | "popover";

@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "total": "Total",
+    "free": "free",
+    "then": "then",
+    "one_time_purchase": "one-time purchase",
+    "or_continue_with": "or continue with"
+  },
+  "actions": {
+    "pay_with_amount": "Pay {amount}",
+    "subscribe": "Subscribe",
+    "start_trial": "Start trial",
+    "processing_payment": "Processing payment"
+  },
+  "cycle": {
+    "during": "{count, plural, one{during # {unit, select, day{day} week{week} month{month} year{year} other{{unit}}}} other{during # {unit, select, day{days} week{weeks} month{months} year{years} other{{unit}}}}}",
+    "short": "{count, plural, one{{unit, select, day{day} week{week} month{month} year{year} other{{unit}}}} other{# {unit, select, day{days} week{weeks} month{months} year{years} other{{unit}}}}}",
+    "per": "{unit, select, day{{count, plural, one{per day} other{per # days}}} week{{count, plural, one{per week} other{per # weeks}}} month{{count, plural, one{per month} other{per # months}}} year{{count, plural, one{per year} other{per # years}}} other{per # {unit}}}"
+  },
+  "legal": {
+    "autoRenew": "You'll have your <b>{{planName}}</b> <b>{{during}}</b>. After this period of time, your plan will be <strong>automatically renewed</strong> with its original price without any discounts applied."
+  }
+}

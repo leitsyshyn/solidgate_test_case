@@ -1,45 +1,55 @@
 import PayWithCardForm from "@/components/PayWithCardForm";
 
 import ApplePayButton from "@/components/ApplePayButton";
+import AutoRenewNotice from "@/components/AutoRenewNotice";
 import BackButton from "@/components/BackButton";
 import Divider from "@/components/Divider";
 import Footer from "@/components/Footer";
-import LegalInfo from "@/components/LegalInfo";
 import OrderInfo from "@/components/OrderInfo";
 
 import Arrow from "@/assets/Arrow.svg?react";
-import LanguageToggle from "@/components/LanguegeToggle";
+import LanguageToggle from "@/components/LanguageToggle";
+import { free_trial_order } from "@/components/mock/orders";
+import { PlanHeader } from "@/components/PlanHeader";
+import type { Order } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
-export default function PaymentPage() {
+interface PaymentPageProps {
+  order: Order;
+}
+
+export default function PaymentPage({
+  order = free_trial_order,
+}: PaymentPageProps) {
+  const { t } = useTranslation("common");
   return (
-    <div className="p-4">
+    <div className="p-4 min-h-screen">
       <div className="mx-auto w-fit">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4 lg:grid-cols-1 lg:justify-items-end">
           <Arrow className="size-6 lg:hidden justify-self-start" />
           <span className="text-lg leading-8 font-semibold lg:hidden justify-self-center">
-            Checkout
+            {t("pages.checkout.title")}
           </span>
           <LanguageToggle className="justify-self-end" />
         </div>
         <div className="flex max-lg:flex-col gap-8">
           <div className="max-w-md basis-md shrink-0 flex flex-col gap-6">
             <BackButton className="max-lg:hidden" />
-            <div className="max-lg:text-center">
-              <div className="font-semibold text-2xl leading-8 ">
-                5 days free
-              </div>
-              <div className="font-medium leading-5">
-                then 299.99 UAH per 14 days
-              </div>
-            </div>
+            <PlanHeader plan={order.plan} />
             <ApplePayButton />
             <Divider />
             <div className="space-y-2">
-              <PayWithCardForm />
-              <LegalInfo />
+              <PayWithCardForm plan={order.plan} />
+              {(order.plan.kind === "free_trial" ||
+                order.plan.kind === "subscription") && (
+                <AutoRenewNotice
+                  planName={order.name}
+                  duration={order.plan.cycle}
+                />
+              )}
             </div>
           </div>
-          <OrderInfo className="max-w-md lg:basis-md shrink-0" />
+          <OrderInfo className="max-w-md lg:basis-md shrink-0" order={order} />
         </div>
         <Footer className="max-lg:mb-9 mt-8 lg:mt-14 mx-auto" />
       </div>
