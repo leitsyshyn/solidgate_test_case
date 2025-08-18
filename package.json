@@ -51,12 +51,12 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "msw": "^2.10.5",
+    "shx": "^0.3.4",
     "tw-animate-css": "^1.3.6",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2",
-    "vite-plugin-svgr": "^4.3.0",
-    "shx": "^0.3.4"
+    "vite-plugin-svgr": "^4.3.0"
   },
   "msw": {
     "workerDirectory": [
