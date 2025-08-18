@@ -20,7 +20,7 @@ import SecurityCodeHint from "@/components/SecurityCodeHint";
 import { makePayWithCardFormSchema } from "@/lib/schemas";
 import type { Plan } from "@/lib/types";
 import valid from "card-validator";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 interface PayWithCardFormProps {
@@ -44,13 +44,26 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
 
   const card = valid.number(form.watch("cardNumber"));
 
-  const [isSecurityCodeVisible, setSecurityCodeVisible] = useState(false);
-
   async function onSubmit(values: z.infer<typeof schema>) {
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success("Payment successful!");
-  }
+    const url = `${import.meta.env.BASE_URL}process-payment`;
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
+      if (!res.ok) {
+        const { message } = await res.json();
+        toast.error(message);
+        return;
+      }
+
+      toast.success("Payment successful!");
+    } catch {
+      toast.error("Network error, please try again");
+    }
+  }
   return (
     <Form {...form}>
       <form
@@ -159,15 +172,13 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
                   <FormControl>
                     <PatternFormat
                       customInput={Input}
-                      type={isSecurityCodeVisible ? "text" : "password"}
+                      type="password"
                       inputMode="numeric"
                       autoComplete="cc-csc"
                       placeholder={"•".repeat(card.card?.code?.size ?? 3)}
                       format={"#".repeat(card.card?.code?.size ?? 3)}
                       className="pr-11"
                       {...field}
-                      onFocus={() => setSecurityCodeVisible(true)}
-                      onBlur={() => setSecurityCodeVisible(false)}
                     />
                   </FormControl>
                   <SecurityCodeHint />

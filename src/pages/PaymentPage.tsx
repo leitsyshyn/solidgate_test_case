@@ -9,9 +9,9 @@ import OrderInfo from "@/components/OrderInfo";
 
 import Arrow from "@/assets/Arrow.svg?react";
 import LanguageToggle from "@/components/LanguageToggle";
-import { free_trial_order } from "@/components/mock/orders";
 import { PlanHeader } from "@/components/PlanHeader";
 import type { Order } from "@/lib/types";
+import { free_trial_order } from "@/mocks/orders";
 import { useTranslation } from "react-i18next";
 
 interface PaymentPageProps {

@@ -1,9 +1,5 @@
-import {
-  free_trial,
-  one_time_payment,
-  subscription,
-} from "@/components/mock/plans";
 import type { Order } from "@/lib/types";
+import { free_trial, one_time_payment, subscription } from "@/mocks/plans";
 
 export const subscription_order: Order = {
   id: "1",
