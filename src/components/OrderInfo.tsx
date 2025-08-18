@@ -2,12 +2,27 @@
 
 import { PlanDetails } from "@/components/PlanDetails";
 import { Separator } from "@/components/ui/separator";
-import type { Order } from "@/lib/types";
+import type { Order, OrderItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+interface OrderItemProps {
+  className?: string;
+  item: OrderItem;
+}
 
 interface OrderInfoProps {
   className?: string;
   order: Order;
+}
+
+function OrderItemInfo({ className, item }: OrderItemProps) {
+  return (
+    <div key={item.id} className={cn(className)}>
+      <div className="text-sm leading-5 font-medium">{item.name}</div>
+      <div className="text-xs text-muted leading-4">{item.description}</div>
+      <Separator className="mt-4" />
+    </div>
+  );
 }
 
 export default function OrderInfo({ className, order }: OrderInfoProps) {
@@ -22,11 +37,7 @@ export default function OrderInfo({ className, order }: OrderInfoProps) {
       <div className="leading-6 font-medium">{order.description}</div>
       <Separator />
       {order.items.map((item) => (
-        <div key={item.id}>
-          <div className="text-sm leading-5 font-medium">{item.name}</div>
-          <div className="text-xs text-muted leading-4">{item.description}</div>
-          <Separator className="mt-4" />
-        </div>
+        <OrderItemInfo key={item.id} item={item} />
       ))}
       <PlanDetails plan={order.plan} />
     </div>

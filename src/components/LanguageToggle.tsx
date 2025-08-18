@@ -25,7 +25,6 @@ export default function LanguageToggle({ className }: LanguageToggleProps) {
   const setLang = (code: Lang) => {
     if (code === current) return;
     i18n.changeLanguage(code);
-
     localStorage.setItem("i18nextLng", code);
   };
 

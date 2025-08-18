@@ -25,7 +25,7 @@ export default function PayWithCardButton({
 
   const cta = useMemo(() => {
     switch (plan.kind) {
-      case "one_time_payment":
+      case "one_time_purchase":
         return t("pay_with_amount", { amount: fmtMoney(plan.price) });
       case "subscription":
         return t("subscribe");

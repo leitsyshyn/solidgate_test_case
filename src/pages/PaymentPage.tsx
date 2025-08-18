@@ -24,7 +24,7 @@ export default function PaymentPage({
   const { t } = useTranslation("common");
   return (
     <div className="p-4 min-h-screen">
-      <div className="mx-auto w-fit">
+      <div className="mx-auto lg:w-fit">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4 lg:grid-cols-1 lg:justify-items-end">
           <Arrow className="size-6 lg:hidden justify-self-start" />
           <span className="text-lg leading-8 font-semibold lg:hidden justify-self-center">
@@ -32,8 +32,8 @@ export default function PaymentPage({
           </span>
           <LanguageToggle className="justify-self-end" />
         </div>
-        <div className="flex max-lg:flex-col gap-8">
-          <div className="max-w-md basis-md shrink-0 flex flex-col gap-6">
+        <div className="flex max-lg:flex-col max-lg:items-center gap-8">
+          <div className="min-[452px]:max-w-[420px] basis-[420px] shrink-0 flex flex-col gap-6">
             <BackButton className="max-lg:hidden" />
             <PlanHeader plan={order.plan} />
             <ApplePayButton />
@@ -49,7 +49,10 @@ export default function PaymentPage({
               )}
             </div>
           </div>
-          <OrderInfo className="max-w-md lg:basis-md shrink-0" order={order} />
+          <OrderInfo
+            className="min-[452px]:max-w-[420px] lg:basis-[420px] shrink-0"
+            order={order}
+          />
         </div>
         <Footer className="max-lg:mb-9 mt-8 lg:mt-14 mx-auto" />
       </div>

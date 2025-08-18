@@ -59,7 +59,7 @@ export function PlanHeader({
 }) {
   const { t } = useTranslation("checkout");
 
-  if (plan.kind === "one_time_payment") {
+  if (plan.kind === "one_time_purchase") {
     return (
       <HeaderWrapper className={className}>
         <HeaderTitile>{fmtMoney(plan.price)}</HeaderTitile>

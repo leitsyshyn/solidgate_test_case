@@ -14,6 +14,6 @@ export const subscription: Plan = {
 };
 
 export const one_time_payment: Plan = {
-  kind: "one_time_payment",
+  kind: "one_time_purchase",
   price: toMoney(29999, "UAH"),
 };

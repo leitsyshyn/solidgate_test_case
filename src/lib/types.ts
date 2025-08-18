@@ -7,8 +7,8 @@ export interface BillingCycle {
   unit: IntervalUnit;
 }
 
-export interface OneTimePayment {
-  kind: "one_time_payment";
+export interface OneTimePurchase {
+  kind: "one_time_purchase";
   price: Money;
 }
 
@@ -25,12 +25,14 @@ export interface FreeTrial {
   cycle: BillingCycle;
 }
 
-export type Plan = OneTimePayment | Subscription | FreeTrial;
+export type Plan = OneTimePurchase | Subscription | FreeTrial;
 
 export type OrderItem = {
   id: string;
   name: string;
   description: string;
+  price?: Money;
+  quantity?: number;
 };
 
 export type Order = {

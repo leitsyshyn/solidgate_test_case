@@ -13,11 +13,44 @@
     "processing_payment": "Обробка платежу"
   },
   "cycle": {
-    "during": "{unit, select, day{ {count, plural, one{протягом # дня} other{протягом # днів}} } week{ {count, plural, one{протягом # тижня} other{протягом # тижнів}} } month{ {count, plural, one{протягом # місяця} other{протягом # місяців}} } year{ {count, plural, one{протягом # року} other{протягом # років}} } other{протягом # {unit}} }",
+    "during": "{unit, select, day{{count, plural, one{протягом # дня} other{протягом # днів}}} week{ {count, plural, one{протягом # тижня} other{протягом # тижнів}}} month{ {count, plural, one{протягом # місяця} other{протягом # місяців}}} year{ {count, plural, one{протягом # року} other{протягом # років}}} other{протягом # {unit}}}",
     "short": "{count, plural, one{{unit, select, day{день} week{тиждень} month{місяць} year{рік} other{{unit}}}} few{# {unit, select, day{дні} week{тижні} month{місяці} year{роки} other{{unit}}}} many{# {unit, select, day{днів} week{тижнів} month{місяців} year{років} other{{unit}}}} other{# {unit, select, day{дня} week{тижня} month{місяця} year{року} other{{unit}}}}}",
     "per": "{unit, select, day{{count, plural, one{щодня} few{кожні # дні} many{кожні # днів} other{кожного дня}}} week{{count, plural, one{щотижня} few{кожні # тижні} many{кожні # тижнів} other{кожного тижня}}} month{{count, plural, one{щомісяця} few{кожні # місяці} many{кожні # місяців} other{кожного місяця}}} year{{count, plural, one{щороку} few{кожні # роки} many{кожні # років} other{кожного року}}} other{кожні # {unit}}}"
   },
   "legal": {
     "autoRenew": "Ви матимете <b>{{planName}}</b> <b>{{during}}</b>. Після цього періоду ваш план буде <strong>автоматично поновлено</strong> за початковою ціною без будь-яких знижок."
+  },
+  "form": {
+    "fields": {
+      "card_number": {
+        "label": "Номер картки"
+      },
+      "expiration_date": {
+        "label": "Термін дії"
+      },
+      "security_code": {
+        "label": "CVC"
+      }
+    },
+    "errors": {
+      "card_number": {
+        "required": "Потрібен номер картки",
+        "invalid": "Некоректний номер картки",
+        "incomplete": "Неповний номер картки",
+        "too_many": "Забагато цифр",
+        "checksum": "Неправильна контрольна сума"
+      },
+      "expiration_date": {
+        "required": "Потрібен термін дії",
+        "invalid_month": "Місяць має бути 01–12",
+        "invalid": "Некоректний термін дії",
+        "expired": "Термін дії картки минув"
+      },
+      "security_code": {
+        "required": "Потрібен код безпеки",
+        "length": "Має містити {expected} цифри",
+        "length_named": "{name} має містити {expected} цифри"
+      }
+    }
   }
 }

@@ -8,7 +8,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,17 +17,23 @@ import { Input } from "@/components/ui/input";
 
 import PayWithCardButton from "@/components/PayWithCardButton";
 import SecurityCodeHint from "@/components/SecurityCodeHint";
-import { PayWithCardFormSchema } from "@/lib/schemas";
+import { makePayWithCardFormSchema } from "@/lib/schemas";
 import type { Plan } from "@/lib/types";
 import valid from "card-validator";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 interface PayWithCardFormProps {
   plan: Plan;
 }
 
 export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
-  const form = useForm<z.infer<typeof PayWithCardFormSchema>>({
-    resolver: zodResolver(PayWithCardFormSchema),
+  const { t } = useTranslation("checkout");
+
+  const schema = useMemo(() => makePayWithCardFormSchema(t), [t]);
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       cardNumber: "",
       expirationDate: "",
@@ -39,11 +44,11 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
 
   const card = valid.number(form.watch("cardNumber"));
 
-  async function onSubmit(values: z.infer<typeof PayWithCardFormSchema>) {
+  const [isSecurityCodeVisible, setSecurityCodeVisible] = useState(false);
+
+  async function onSubmit(values: z.infer<typeof schema>) {
     await new Promise((r) => setTimeout(r, 800));
-    toast.success("Payment successful!", {
-      description: JSON.stringify(values),
-    });
+    toast.success("Payment successful!");
   }
 
   return (
@@ -69,17 +74,20 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
             }).join("");
             return (
               <FormItem>
-                <FormLabel>Card Number</FormLabel>
+                <FormLabel>{t("form.fields.card_number.label")}</FormLabel>
                 <FormControl>
                   <PatternFormat
                     customInput={Input}
                     inputMode="numeric"
                     autoComplete="cc-number"
-                    placeholder="1234 5678 9012 3456"
+                    placeholder="1234 1234 1234 1234"
                     format={format}
                     onValueChange={(v) => {
                       field.onChange(v.formattedValue);
-                      if (form.formState.errors.securityCode) {
+                      if (
+                        form.formState.errors.securityCode ||
+                        form.formState.dirtyFields.securityCode
+                      ) {
                         void form.trigger("securityCode");
                       }
                     }}
@@ -97,7 +105,7 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
             name="expirationDate"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Expiration Date</FormLabel>
+                <FormLabel>{t("form.fields.expiration_date.label")}</FormLabel>
                 <FormControl>
                   <PatternFormat
                     customInput={Input}
@@ -151,19 +159,17 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
                   <FormControl>
                     <PatternFormat
                       customInput={Input}
+                      type={isSecurityCodeVisible ? "text" : "password"}
                       inputMode="numeric"
                       autoComplete="cc-csc"
                       placeholder={"•".repeat(card.card?.code?.size ?? 3)}
                       format={"#".repeat(card.card?.code?.size ?? 3)}
                       className="pr-11"
                       {...field}
+                      onFocus={() => setSecurityCodeVisible(true)}
+                      onBlur={() => setSecurityCodeVisible(false)}
                     />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    {card.card?.code?.name === "CID"
-                      ? "A 4-digit code on the front of your card."
-                      : "A 3-digit code on the back of your card."}
-                  </FormDescription>
                   <SecurityCodeHint />
                 </div>
                 <FormMessage />

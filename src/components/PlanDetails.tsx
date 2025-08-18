@@ -54,7 +54,7 @@ export function PlanDetails({
 }) {
   const { t } = useTranslation("checkout");
 
-  if (plan.kind === "one_time_payment") {
+  if (plan.kind === "one_time_purchase") {
     return (
       <DetailsWrapper className={className}>
         <DetailsDescription>{t("labels.total")}&nbsp;</DetailsDescription>
