@@ -26,6 +26,7 @@ import { Hint, HintContent, HintTrigger } from "@/components/ui/hint";
 import { PayWithCardFormSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import valid from "card-validator";
+import { toast } from "sonner";
 
 interface PayWithCardFormProps {
   // TODO: Improve amount type
@@ -49,7 +50,9 @@ export default function PayWithCardForm({
 
   async function onSubmit(values: z.infer<typeof PayWithCardFormSchema>) {
     await new Promise((r) => setTimeout(r, 800));
-    console.log(values);
+    toast.success("Payment successful!", {
+      description: JSON.stringify(values),
+    });
   }
 
   return (
