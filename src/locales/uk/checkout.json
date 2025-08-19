@@ -4,7 +4,7 @@
     "free": "безкоштовно",
     "then": "далі",
     "one_time_purchase": "одноразова покупка",
-    "or_continue_with": "або продовжити з"
+    "or_continue_with": "або сплатити карткою"
   },
   "actions": {
     "pay_with_amount": "Сплатити {amount}",

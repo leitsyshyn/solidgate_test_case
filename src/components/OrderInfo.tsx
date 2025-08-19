@@ -3,7 +3,7 @@
 import { PlanDetails } from "@/components/PlanDetails";
 import { Separator } from "@/components/ui/separator";
 import type { Order, OrderItem } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, fmtMoney } from "@/lib/utils";
 
 interface OrderItemProps {
   className?: string;
@@ -18,8 +18,20 @@ interface OrderInfoProps {
 function OrderItemInfo({ className, item }: OrderItemProps) {
   return (
     <div key={item.id} className={cn(className)}>
-      <div className="text-sm leading-5 font-medium">{item.name}</div>
-      <div className="text-xs text-muted leading-4">{item.description}</div>
+      <div className="flex justify-between items-start gap-4">
+        <div>
+          <div className="text-sm leading-5 font-medium">{item.name}</div>
+          <div className="text-xs text-muted leading-4">{item.description}</div>
+        </div>
+        <div className="text-end">
+          {item.price && (
+            <div className="text-sm font-medium">{fmtMoney(item.price)}</div>
+          )}
+          {item.quantity && (
+            <div className="text-xs text-muted leading-5">x{item.quantity}</div>
+          )}
+        </div>
+      </div>
       <Separator className="mt-4" />
     </div>
   );
