@@ -59,9 +59,9 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
         return;
       }
 
-      toast.success("Payment successful!");
+      toast.success(t("form.submit.success"));
     } catch {
-      toast.error("Network error, please try again");
+      toast.error(t("form.submit.error"));
     }
   }
   return (
@@ -170,13 +170,12 @@ export default function PayWithCardForm({ plan }: PayWithCardFormProps) {
                 <FormLabel>{card.card?.code?.name ?? "CVC"}</FormLabel>
                 <div className="relative">
                   <FormControl>
-                    <PatternFormat
-                      customInput={Input}
+                    <Input
                       type="password"
                       inputMode="numeric"
+                      maxLength={card.card?.code?.size ?? 3}
                       autoComplete="cc-csc"
                       placeholder={"•".repeat(card.card?.code?.size ?? 3)}
-                      format={"#".repeat(card.card?.code?.size ?? 3)}
                       className="pr-11"
                       {...field}
                     />

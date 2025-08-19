@@ -36,23 +36,16 @@ export function makePayWithCardFormSchema(t: TFunction<"checkout">) {
           if (len > max) {
             ctx.addIssue({
               code: "custom",
-              message: t("form.errors.card_number.too_many"),
+              message: t("form.errors.card_number.too_long"),
             });
             return;
           }
 
           if (!num.isValid) {
-            if (lengths?.includes(len)) {
-              ctx.addIssue({
-                code: "custom",
-                message: t("form.errors.card_number.checksum"),
-              });
-            } else {
-              ctx.addIssue({
-                code: "custom",
-                message: t("form.errors.card_number.invalid"),
-              });
-            }
+            ctx.addIssue({
+              code: "custom",
+              message: t("form.errors.card_number.invalid"),
+            });
           }
         }),
 
@@ -113,9 +106,9 @@ export function makePayWithCardFormSchema(t: TFunction<"checkout">) {
           code: "custom",
           path: ["securityCode"],
           message: name
-            ? t("form.errors.security_code.length_named", { name, expected })
-            : t("form.errors.security_code.length", {
-                expected: expected || "3-4",
+            ? t("form.errors.security_code.invalid_length", { name, expected })
+            : t("form.errors.security_code.invalid_length_generic", {
+                expected: expected || 3,
               }),
         });
       }
